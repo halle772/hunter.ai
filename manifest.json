@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "JobHunter - Rule-Based Autofill",
+  "version": "1.0.0",
+  "description": "Automatically fill form fields based on customizable rules",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["ai-integration.js", "form-filler.js", "button-navigator.js", "auto-apply-brain.js", "auto-apply-prompts.js", "job-detector.js", "autofill-popup.js", "popup-integration.js", "content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "JobHunter Autofill"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

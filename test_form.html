@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Job Application Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #4CAF50;
+      box-shadow: 0 0 5px rgba(76,175,80,0.3);
+    }
+    .file-input-group {
+      margin-bottom: 20px;
+    }
+    input[type="file"] {
+      padding: 8px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      color: #1976d2;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Job Application Form Test</h1>
+    
+    <div class="info">
+      <strong>ℹ️ Test Instructions:</strong> This is a test form to verify the JobHunter extension works correctly. 
+      Click the JobHunter icon and use "Apply with Documents" to test the auto-fill feature.
+    </div>
+
+    <form id="applicationForm">
+      <!-- Personal Information -->
+      <h3>Personal Information</h3>
+      
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input type="text" id="firstName" name="firstName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input type="text" id="lastName" name="lastName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890">
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" placeholder="123 Main St">
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city">
+      </div>
+
+      <div class="form-group">
+        <label for="state">State/Province</label>
+        <input type="text" id="state" name="state">
+      </div>
+
+      <div class="form-group">
+        <label for="zipCode">Zip/Postal Code</label>
+        <input type="text" id="zipCode" name="zipCode">
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country">
+      </div>
+
+      <!-- Work Authorization -->
+      <h3>Work Authorization</h3>
+      
+      <div class="form-group">
+        <label for="workAuth">Work Authorization Status</label>
+        <select id="workAuth" name="workAuth">
+          <option value="">-- Select --</option>
+          <option value="US Citizen">US Citizen</option>
+          <option value="Permanent Resident">Permanent Resident</option>
+          <option value="Need Sponsorship">Need Sponsorship</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Professional Information -->
+      <h3>Professional Information</h3>
+      
+      <div class="form-group">
+        <label for="linkedinProfile">LinkedIn Profile URL</label>
+        <input type="text" id="linkedinProfile" name="linkedinProfile" placeholder="https://www.linkedin.com/in/...">
+      </div>
+
+      <!-- Documents -->
+      <h3>Documents</h3>
+      
+      <div class="file-input-group">
+        <label for="resumeFile">Resume/CV *</label>
+        <input type="file" id="resumeFile" name="resumeFile" accept=".pdf,.doc,.docx,.txt" required>
+      </div>
+
+      <div class="file-input-group">
+        <label for="coverLetterFile">Cover Letter</label>
+        <input type="file" id="coverLetterFile" name="coverLetterFile" accept=".pdf,.doc,.docx,.txt">
+      </div>
+
+      <!-- Form Actions -->
+      <button type="submit">Submit Application</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('applicationForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Form submission prevented for testing. Check the console for filled values.');
+      
+      // Log all form values for debugging
+      const form = document.getElementById('applicationForm');
+      const formData = new FormData(form);
+      console.log('Form values:');
+      for (let [key, value] of formData.entries()) {
+        if (key !== 'resumeFile' && key !== 'coverLetterFile') {
+          console.log(`${key}: ${value}`);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

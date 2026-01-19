@@ -1,0 +1,13 @@
+import base64
+
+# Minimal blue PNG icons with white circles
+icons = {
+    'icon16.png': 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAiUlEQVR42mNkYPj/HwMDAwMDQ2pqKgPDf0aG/wyMjIwMDA0NDQwM/xkZ/jMwMPxnYGD4//8/Q0NDAwPDfyYGBv7/DAwM/xkYGP4zMjAw/GdkYOD/z8DAwPCfgYGBgYHhPwMDQ3p6OsPDhw8ZGBgYGBgYGBj+MzAwMDAwMPxnYPjP8OHDhweMDAwMDA//GRj+MzAwMDA8ePDgPwMDAwMDA8OHDx8YGP7/Z/jPwPCfgQFvDAAA//8DAKqDxBQ+kqCoAAAAAElFTkSuQmCC',
+    'icon48.png': 'iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAj0lEQVR4Xu3aPQ7CMAwG4KQOPIDEyBOw8AROxM7CyFOw8hQsSCwdGBhYGZhgYWDnBgsbE9mSnbY2ctMkd/l+d73LS5M4jhPHcZMkd109LS2tVqv5fr+VZZler1dZluXz+aqlpZWm6XM8Hl+Xy2V5Op2U53n5fr8VhuGlM03TRSJ5nlMcx4rjWLXbTZVlqYqiUJZlSrM0NJIkqVarVSwWV0opnU6nKMsqr9dLaZqG/wMAAP//Aw==',
+    'icon128.png': 'iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADTAc+pAAAAm0lEQVR4Xu3YPQrCQBQG4KT1pLHR0sZGvVAstLES79BK771XL+JVLBRvYKGFlYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhf0z/v7+/7PZbP7Z7Xb/s9vt/mdJkiRJkqRfz+Vyub4vl2u/3ydJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkv+Yj+cDAAD//wMAQbsGhiGUYpkAAAAASUVORK5CYII='
+}
+
+for filename, b64_data in icons.items():
+    with open(f'icons/{filename}', 'wb') as f:
+        f.write(base64.b64decode(b64_data))
+    print(f'Created {filename}')

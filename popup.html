@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobHunter Autofill</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>JobHunter Autofill</h1>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="autofill">Autofill</button>
+        <button class="tab-btn" data-tab="profile">Profile</button>
+        <button class="tab-btn" data-tab="common-questions">FAQ</button>
+        <button class="tab-btn" data-tab="documents">Documents</button>
+        <button class="tab-btn" data-tab="ai">AI Settings</button>
+        <button class="tab-btn" data-tab="rules">Rules</button>
+      </div>
+    </header>
+
+    <!-- Autofill Tab -->
+    <div id="autofill" class="tab-content active">
+      <!-- Submission Status Display -->
+      <div id="submissionStatus" class="section" style="display: none;">
+        <div class="submission-success">
+          <div class="success-icon">✅</div>
+          <div class="success-content">
+            <h3>Application Submitted!</h3>
+            <p class="success-message" id="successMessage">Your application has been submitted successfully.</p>
+            <p class="success-timestamp" id="successTime"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Quick Autofill</h2>
+        <button id="autofillBtn" class="btn btn-primary">Fill Now</button>
+        <p class="info" id="status"></p>
+      </div>
+
+      <div class="section" id="applySection" style="display: none;">
+        <h2>Apply with Document</h2>
+        <div class="form-group">
+          <label>Select Resume:</label>
+          <select id="resumeSelect" class="form-select">
+            <option value="">-- No Resume --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Select Cover Letter:</label>
+          <select id="coverLetterSelect" class="form-select">
+            <option value="">-- No Cover Letter --</option>
+          </select>
+        </div>
+        <button id="applyBtn" class="btn btn-primary" style="width: 100%;">Apply with Selected Documents</button>
+        <p class="info" id="applyStatus"></p>
+      </div>
+
+      <div class="section">
+        <h2>Apply Mode</h2>
+        <div class="apply-mode-selector">
+          <label class="radio-label">
+            <input type="radio" name="applyMode" value="manual" id="manualApplyMode">
+            <span class="mode-title">Manual Apply</span>
+            <span class="mode-desc">I fill fields, you click continue/next</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="applyMode" value="auto" id="autoApplyMode">
+            <span class="mode-title">Auto Apply</span>
+            <span class="mode-desc">Fill all fields and submit automatically</span>
+          </label>
+        </div>
+        <p class="info" id="applyModeStatus"></p>
+      </div>
+
+      <div class="section">
+        <h2>Settings</h2>
+        <label class="checkbox-label">
+          <input type="checkbox" id="autoFillOnLoad">
+          Auto-fill on page load
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="useAIAnswers">
+          Use AI to generate answers for open-ended questions
+        </label>
+      </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="profile" class="tab-content">
+      <div class="section">
+        <h2>Personal Information</h2>
+        <div class="form-group">
+          <label>Company Name:</label>
+          <input type="text" id="companyName" class="form-input" placeholder="Tech Corp">
+        </div>
+        <div class="form-group">
+          <label>Job Title:</label>
+          <input type="text" id="jobTitle" class="form-input" placeholder="Senior Engineer">
+        </div>
+        <div class="form-group">
+          <label>First Name:</label>
+          <input type="text" id="firstName" class="form-input" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label>Last Name:</label>
+          <input type="text" id="lastName" class="form-input" placeholder="Doe">
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" id="email" class="form-input" placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label>Phone:</label>
+          <input type="tel" id="phone" class="form-input" placeholder="(123) 456-7890">
+        </div>
+        <div class="form-group">
+          <label>Address:</label>
+          <input type="text" id="address" class="form-input" placeholder="123 Main St">
+        </div>
+        <div class="form-group">
+          <label>City:</label>
+          <input type="text" id="city" class="form-input" placeholder="New York">
+        </div>
+        <div class="form-group">
+          <label>State/Province:</label>
+          <input type="text" id="state" class="form-input" placeholder="NY">
+        </div>
+        <div class="form-group">
+          <label>Zip/Postal Code:</label>
+          <input type="text" id="zipCode" class="form-input" placeholder="10001">
+        </div>
+        <div class="form-group">
+          <label>Country:</label>
+          <input type="text" id="country" class="form-input" placeholder="United States">
+        </div>
+        <div class="form-group">
+          <label>LinkedIn Profile:</label>
+          <input type="url" id="linkedinProfile" class="form-input" placeholder="https://www.linkedin.com/in/...">
+        </div>
+        <div class="form-group">
+          <label>Work Authorization:</label>
+          <select id="workAuth" class="form-select">
+            <option value="">-- Select --</option>
+            <option value="Citizen">Citizen</option>
+            <option value="Green Card">Green Card</option>
+            <option value="Work Visa">Work Visa</option>
+            <option value="Requires Sponsorship">Requires Sponsorship</option>
+          </select>
+        </div>
+        <div class="button-group">
+          <button id="saveProfileBtn" class="btn btn-primary">Save Profile</button>
+          <button id="loadFromChromeBtn" class="btn btn-secondary">Load from Chrome</button>
+        </div>
+        <p class="info" id="profileStatus"></p>
+      </div>
+    </div>
+
+    <!-- Common Questions Tab -->
+    <div id="common-questions" class="tab-content">
+      <div class="section">
+        <h2>Common Interview Questions</h2>
+        <p class="info">Save answers to frequently asked questions. These will be used to auto-fill application forms.</p>
+        
+        <div id="commonQuestionsList" class="questions-list">
+          <!-- Questions will be dynamically loaded here -->
+        </div>
+
+        <div class="form-group">
+          <label>Add New Question:</label>
+          <input type="text" id="newQuestionInput" class="form-input" placeholder="e.g., How did you hear about us?">
+        </div>
+
+        <div class="form-group">
+          <label>Answer:</label>
+          <textarea id="newAnswerInput" class="form-input" placeholder="Enter your answer..." style="min-height: 60px;"></textarea>
+        </div>
+
+        <button id="addQuestionBtn" class="btn btn-primary">Add Question</button>
+        <p class="info" id="commonQuestionStatus"></p>
+      </div>
+    </div>
+
+    <!-- Documents Tab -->
+    <div id="documents" class="tab-content">
+      <div class="section">
+        <h2>Resumes</h2>
+        <div class="document-upload">
+          <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt" hidden>
+          <button id="resumeUploadBtn" class="btn btn-secondary">+ Add Resume</button>
+        </div>
+        <div id="resumesList" class="documents-list"></div>
+      </div>
+
+      <div class="section">
+        <h2>Cover Letters</h2>
+        <div class="document-upload">
+          <input type="file" id="coverLetterInput" accept=".pdf,.doc,.docx,.txt" hidden>
+          <button id="coverLetterUploadBtn" class="btn btn-secondary">+ Add Cover Letter</button>
+        </div>
+        <div id="coverLettersList" class="documents-list"></div>
+      </div>
+    </div>
+
+    <!-- AI Settings Tab -->
+    <div id="ai" class="tab-content">
+      <div class="section">
+        <h2>AI Settings</h2>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="aiEnabled">
+            Enable AI Answer Generation
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="aiProvider">AI Provider:</label>
+          <select id="aiProvider" class="form-select">
+            <option value="openai">OpenAI (GPT-3.5 / GPT-4)</option>
+            <option value="ollama">Ollama (Local LLM)</option>
+            <option value="huggingface">HuggingFace</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="openaiSettings">
+          <label for="openaiKey">OpenAI API Key:</label>
+          <input type="password" id="openaiKey" class="form-input" placeholder="sk-...">
+          <small>Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a></small>
+          
+          <label for="openaiModel">Model:</label>
+          <select id="openaiModel" class="form-select">
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast & Cheap)</option>
+            <option value="gpt-4">GPT-4 (Smarter)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="ollamaSettings" style="display: none;">
+          <label for="ollamaEndpoint">Ollama Endpoint:</label>
+          <input type="text" id="ollamaEndpoint" class="form-input" placeholder="http://localhost:11434/api/generate">
+          <small>Make sure Ollama is running locally</small>
+          
+          <label for="ollamaModel">Model:</label>
+          <input type="text" id="ollamaModel" class="form-input" placeholder="llama2, mistral, neural-chat, etc.">
+        </div>
+
+        <div class="form-group" id="huggingfaceSettings" style="display: none;">
+          <label for="hfKey">HuggingFace API Key:</label>
+          <input type="password" id="hfKey" class="form-input" placeholder="hf_...">
+          <small>Get your API key from <a href="https://huggingface.co/settings/tokens" target="_blank">HuggingFace</a></small>
+          
+          <label for="hfModel">Model:</label>
+          <input type="text" id="hfModel" class="form-input" placeholder="mistralai/Mistral-7B-Instruct-v0.1">
+        </div>
+
+        <button id="testAIBtn" class="btn btn-secondary">Test Connection</button>
+        <button id="saveAIBtn" class="btn btn-primary">Save AI Settings</button>
+        <p class="info" id="aiStatus"></p>
+      </div>
+    </div>
+
+    <!-- Rules Tab -->
+    <div id="rules" class="tab-content">
+      <div class="section">
+        <h2>Autofill Rules</h2>
+        <button id="addRuleBtn" class="btn btn-secondary">Add Rule</button>
+      </div>
+
+      <div id="rulesList" class="rules-list"></div>
+
+      <!-- Rule Editor Modal -->
+      <div id="ruleModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Edit Rule</h2>
+          
+          <div class="form-group">
+            <label for="ruleName">Rule Name:</label>
+            <input type="text" id="ruleName" placeholder="e.g., LinkedIn Jobs">
+          </div>
+
+          <div class="form-group">
+            <label for="urlPattern">URL Pattern (e.g., linkedin.com/jobs or *):</label>
+            <input type="text" id="urlPattern" placeholder="*">
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="ruleEnabled" checked>
+              Enabled
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Field Mappings:</label>
+            <div id="fieldMappings"></div>
+            <button type="button" id="addFieldBtn" class="btn btn-small">Add Field</button>
+          </div>
+
+          <div class="modal-actions">
+            <button id="saveRuleBtn" class="btn btn-primary">Save</button>
+            <button id="deleteRuleBtn" class="btn btn-danger">Delete</button>
+            <button id="cancelRuleBtn" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
