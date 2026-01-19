@@ -50,14 +50,149 @@ function checkSubmissionStatus() {
     }
   });
 }
-
-// Check for submission status updates periodically
-setInterval(() => {
-  checkSubmissionStatus();
-}, 2000);
-
-// Listen for submission status messages from content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  const importBtn = document.getElementById('importSampleFAQsBtn');
+  if (importBtn) {
+    importBtn.addEventListener('click', () => {
+      if (!confirm('Import sample questions and answers? This will add many FAQ entries to your saved questions.')) return;
+      importSampleFAQs();
+    });
+  }
+}, 100);
+
+// Import a large set of sample questions/answers into commonQuestions
+function importSampleFAQs() {
+  const sample = {
+    "First Name": "Edwin",
+    "Last Name": "Rivera",
+    "Full Name": "Edwin Rivera",
+    "Legal Name": "Edwin Rivera",
+    "Preferred Name": "Edwin",
+    "Email": "bytelogic772@gmail.cm",
+    "Email Address": "bytelogic772@gmail.com",
+    "Phone": "(814) 273-9043",
+    "Phone Number": "(814) 273-9043",
+    "Mobile Phone": "(814) 273-9043",
+    "Location": "",
+    "City": "",
+    "State": "Pen",
+    "State / Province": "",
+    "Country": "",
+    "Zip": "",
+    "Postal Code": "",
+    "Time Zone": "EST",
+    "Work Authorization": "USC",
+    "Authorized to Work": "Yes",
+    "Eligible to Work": "Yes",
+    "Visa Sponsorship": "No",
+    "Require Sponsorship": "No",
+    "Sponsorship Required": "No",
+    "Visa Status": "USC",
+    "Employment Eligibility": "Yes",
+    "Work Permit Status": "USC",
+    "Immigration Status": "USC",
+    "Current Employer": "N/A",
+    "Current Company": "N/A",
+    "Current Job Title": "Senior Software Engineer",
+    "Employment Status": "N/A",
+    "Employment Type": "Full-time",
+    "Full-Time Availability": "9am EST - 6pm EST",
+    "Contract Availability": "Immediately",
+    "Notice Period": "1 week",
+    "Start Date": "Immediately",
+    "Earliest Start Date": "Immediately",
+    "Years of Experience": "9 years",
+    "Total Experience": "9 years",
+    "Relevant Experience": "8 yeras",
+    "Software Engineering Experience": "9 years",
+    "Full Stack Experience": "8 years",
+    "Backend Experience": "8 years",
+    "Frontend Experience": "9 years",
+    "Leadership Experience": "6 years",
+    "Management Experience": "6 years",
+    "Mentoring Experience": "6 years",
+    "Programming Languages": "JavaScript, Python, Java, C#",
+    "Primary Programming Language": "JavaScript, Python",
+    "Secondary Programming Language": "Java, C#",
+    "JavaScript Experience": "9 years",
+    "TypeScript Experience": "9 years",
+    "React Experience": "9 years",
+    "Node.js Experience": "8 years",
+    "Redux Experience": "8 years",
+    "API Development Experience": "8 years",
+    "Microservices Experience": "7 years",
+    "Cloud Experience": "7 years",
+    "AWS Experience": "8 years",
+    "Azure Experience": "7 years",
+    "GCP Experience": "7 years",
+    "Database Experience": "8 years",
+    "SQL Experience": "8 years",
+    "NoSQL Experience": "8 years",
+    "DevOps Experience": "8 years",
+    "CI/CD Experience": "8 years",
+    "Docker Experience": "8 years",
+    "Kubernetes Experience": "8 years",
+    "Testing Experience": "7 years",
+    "Automated Testing Experience": "7 years",
+    "Architecture Experience": "6 years",
+    "System Design Experience": "6 years",
+    "Scalability Experience": "6 years",
+    "Performance Optimization Experience": "6 years",
+    "Security Experience": "6 years",
+    "Work Location Preference": "Remote",
+    "Remote Work Preference": "Yes",
+    "Relocation Willingness": "No",
+    "Travel Willingness": "No",
+    "Shift Availability": "Yes",
+    "Time Zone Availability": "EST - PST",
+    "Desired Salary": "120000 - 140000",
+    "Salary Expectation": "130000",
+    "Compensation Expectation": "130000",
+    "Minimum Salary": "120000",
+    "Maximum Salary": "150000",
+    "Current Salary": "130000",
+    "Cover Letter": "AI based on Job description",
+    "Linkedin": "https://www.linkedin.com/in/edwin-r-rivera-86b6683a6/",
+    "Portfolio": "https://edwin-r.netlify.app/",
+    "Git": "https://github.com/halle772",
+    "Personal Website": "https://edwin-r.netlify.app/",
+    "Background Check Consent": "Yes",
+    "Drug Test Consent": "Yes",
+    "Criminal History Disclosure": "No",
+    "Non-Compete Agreement": "No",
+    "Confidentiality Agreement": "No",
+    "Gender": "Man",
+    "Gender Identity": "Man",
+    "Race / Ethnicity": "Hispanic/White",
+    "Veteran Status": "Yes",
+    "Disability Status": "No",
+    "How Did You Hear About Us?": "Linkedin",
+    "Have you ever worked with LifeStance Health or an affiliate?": "",
+    "Previously Employed by ...?": "No",
+    "Current or Former Employee": "N/A",
+    "Are you currently employed by ...?": "No",
+    "Have you ever been employed by LifeStance Health?": "",
+    "Are you Hispanic or Latino?": "Hispanic",
+    "SMS Consent": "Yes",
+    "Text Message Consent": "Yes",
+    "Receive Text Message Updates": "Yes",
+    "Messaging Consent": "",
+    "Why are you interested in this role?": "",
+    "Additional Information": "",
+    "Are you open to relocating?": "No",
+    "Do you require immigration support?": "No",
+    "Work experience": "RTX(Partt & Whitney): May 2024 – Dec 2025 | Remote; Mode Effect: Mar 2023 – May 2024 | Remote; RGR Marking: Jul 2021 – Feb 2023 | Remote; Abrams: Mar 2019 – Jul 2021 | Remote"
+  };
+
+  chrome.storage.local.get(['commonQuestions'], (result) => {
+    const commonQuestions = result.commonQuestions || {};
+    Object.assign(commonQuestions, sample);
+    chrome.storage.local.set({ commonQuestions }, () => {
+      loadCommonQuestions();
+      showCommonQuestionStatus('✓ Sample questions imported', '#388e3c');
+    });
+  });
+}
   if (request.action === 'submissionStatusUpdate') {
     console.log('📍 Submission status update received:', request.status);
     checkSubmissionStatus();

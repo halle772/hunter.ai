@@ -74,53 +74,71 @@ function handleAutofillAction() {
     return;
   }
 
-  // Get profile from storage
-  chrome.storage.sync.get(['profile', 'documents', 'apiKey'], (data) => {
-    const profile = data.profile || {};
-    const apiKey = data.apiKey;
-    const formFields = detector.getFormFields();
+  // Get profile and documents from background (ensures freshest data)
+  chrome.runtime.sendMessage({ action: 'getUserProfile' }, (profileResponse) => {
+    const profile = (profileResponse && profileResponse.profile) ? profileResponse.profile : {};
 
-    // Initialize brain if available
-    if (typeof AutoApplyBrain === 'undefined') {
-      console.warn('AutoApplyBrain not loaded, using AI-first approach with fallback');
-      aiFirstFormFill(formFields, profile);
-      return;
-    }
+    // Get stored documents
+    chrome.runtime.sendMessage({ action: 'getDocuments' }, (docResponse) => {
+      const documents = (docResponse && docResponse.documents) ? docResponse.documents : {};
 
-    // Use AutoApplyBrain for intelligent analysis
-    const brain = new AutoApplyBrain();
-    const analysis = brain.analyzeForm(
-      formFields.map(f => f.label || f.name)
-    );
+      const apiKeyPromise = new Promise((resolve) => {
+        try {
+          chrome.storage.local.get(['aiSettings'], (res) => {
+            const aiSettings = res.aiSettings || {};
+            resolve(aiSettings.apiKey || null);
+          });
+        } catch (e) {
+          resolve(null);
+        }
+      });
 
-    console.log('📊 Analysis:', analysis);
+      apiKeyPromise.then((apiKey) => {
+        const formFields = detector.getFormFields();
 
-    const jobInfo = detector.extractJobInfo();
-    let aiFieldCount = 0;
+        // Initialize brain if available
+        if (typeof AutoApplyBrain === 'undefined') {
+          console.warn('AutoApplyBrain not loaded, using AI-first approach with fallback');
+          aiFirstFormFill(formFields, profile);
+          return;
+        }
 
-    // Process each field - AI-first strategy
-    formFields.forEach((field, index) => {
-      const classification = analysis.classifications[index];
-      
-      // Only auto-fill essential contact info immediately
-      if (shouldAutoFillBasicInfo(field)) {
-        fillBasicContactInfo(field, profile);
-      } else {
-        // Mark for AI processing
-        markForAI(field, classification);
-      }
+        // Use AutoApplyBrain for intelligent analysis
+        const brain = new AutoApplyBrain();
+        const analysis = brain.analyzeForm(
+          formFields.map(f => f.label || f.name)
+        );
+
+        console.log('📊 Analysis:', analysis);
+
+        const jobInfo = detector.extractJobInfo();
+        let aiFieldCount = 0;
+
+        // Process each field - AI-first strategy
+        formFields.forEach((field, index) => {
+          const classification = analysis.classifications[index];
+
+          // Only auto-fill essential contact info immediately
+          if (shouldAutoFillBasicInfo(field)) {
+            fillBasicContactInfo(field, profile);
+          } else {
+            // Mark for AI processing
+            markForAI(field, classification);
+          }
+        });
+
+        console.log(`✓ Form prepared - ${formFields.length} fields to fill`);
+
+        // Show status
+        if (popup) {
+          popup.showStatus(`Filling ${formFields.length} fields...`, 'info');
+          popup.updateProgress(10);
+        }
+
+        // Now fill ALL remaining fields with AI answers
+        getAIAnswersForAllFields(formFields, jobInfo, profile, apiKey);
+      });
     });
-
-    console.log(`✓ Form prepared - ${formFields.length} fields to fill`);
-
-    // Show status
-    if (popup) {
-      popup.showStatus(`Filling ${formFields.length} fields...`, 'info');
-      popup.updateProgress(10);
-    }
-
-    // Now fill ALL remaining fields with AI answers
-    getAIAnswersForAllFields(formFields, jobInfo, profile, apiKey);
   });
 }
 
